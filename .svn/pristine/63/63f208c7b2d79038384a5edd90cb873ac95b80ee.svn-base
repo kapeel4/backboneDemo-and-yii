@@ -1,0 +1,53 @@
+define(['jquery', 'backbone'],
+function( $, Backbone ) {
+    'use strict';
+
+ /* Return a model class definition */
+ return Backbone.Model.extend({
+  initialize: function() {
+  },
+
+  defaults: {
+   photo: "./img/placeholder.png"
+   // name :'',
+   // address : '',
+   // tel : '',
+   // email : ''
+  },
+    // validate: function (attrs) {
+    //     if (!attrs.name) {
+    //         return 'Please fill name field.';
+    //     }
+    //     if (!attrs.address) {
+    //         return 'Please fill address field.';
+    //     }
+    //     if (!attrs.tel) {
+    //         return 'Please fill telepone field.';
+    //     }
+    //     if (!attrs.email) {
+    //         return 'Please fill email field.';
+    //     }
+    // }
+  //     validation: function(attrs){
+  //   'name': {
+  //     required: true
+  //   },
+  //   'address': {
+  //     required: true
+  //   },    
+  //   'tel': {
+  //      required: true
+  //   },
+  //   'email': {
+  //     pattern: 'email'
+  //      msg: 'Please enter a valid email'
+  //   },
+  //   someAttribute: function(value) {
+  //     if(value !== 'somevalue') {
+  //       return 'Error message';
+  //     }
+  //   }
+  // }
+
+    });
+});

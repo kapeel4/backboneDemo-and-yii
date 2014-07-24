@@ -1,0 +1,53 @@
+<?php /* @var $this Controller */ ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="language" content="en" />
+
+	<!-- blueprint CSS framework -->
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css"/>
+
+	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+	<script>
+	!function(){
+		base_url = "<?php echo Yii::app()->request->baseUrl; ?>";
+	}();
+	</script>
+	 <script id="contactTemplate" type="text/template">
+
+        <img src="<%= photo %>" alt="<%= name %>" />
+        <h1><%= name %><span><%= type %></span></h1>
+        <div><%= address %></div>
+        <dl>
+            <dt>Tel:</dt><dd><%= tel %></dd>
+            <dt>Email:</dt><dd><a href="mailto:<%= email %>"><%= email %></a></dd>
+        </dl>
+        <br> <button class="delete">Delete</button>
+        <button class="edit">Edit</button>
+    </script>
+<script id="contactEditTemplate" type="text/template">
+<form action="#">
+    <div id= "editimageupload-container"></div>
+    <input class="name" value="<%= name %>" />
+   
+    <input class="address" value="<%= address %>" />
+    <input class="tel" value="<%= tel %>" />
+    <input class="email" value="<%= email %>" />
+    <button class="save">Save</button>
+    <button class="cancel">Cancel</button>
+</form>
+</script>
+<script type="text/template" id="imageupload">
+ <label for="photo">Photo:</label>
+<input id="photo" type="file"  class = "inputfile" />
+</script>
+</head>
+
+<body>
+	<div id="main-page">
+	<?php echo $content; ?>
+</div>
+	        <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/lib/require.js" data-main="<?php echo Yii::app()->request->baseUrl; ?>/js/config"></script> 
+</body>
+</html>

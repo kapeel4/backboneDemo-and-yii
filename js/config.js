@@ -1,0 +1,32 @@
+ require.config({
+    // Initialize the application with the main application file
+    deps: ["js/main","jquery.validate"],
+
+    baseUrl: "",
+
+    paths: {
+      // Libraries
+      "text" : "js/lib/text",
+      "jquery": "js/lib/jquery.min",
+
+      "alertify" : "js/lib/alertify.min",
+      "colorbox" : "js/lib/jquery.colorbox-min",
+      "lodash" : "js/lib/lodash.min",
+      "backbone": "js/lib/backbone.min",
+      "jquery.validate" : "js/lib/jquery.validate",
+    },
+
+    shim: {
+      "backbone": {
+        deps: ["lodash", "jquery"],
+        exports: "Backbone"
+      },
+      "jquery.validate" : {
+          deps : ['jquery']
+      },
+      "colorbox" : {
+        deps : ['jquery']
+      }
+     
+    }
+  });

@@ -1,0 +1,38 @@
+    <div id="contacts">
+        <header>
+            <a id="showForm" href="#">Add new contact</a>
+        </header>
+        
+        <form id="addContact" action="#">
+             <div id= "imageupload-container"></div>
+                <label for="type">Type:</label>
+                <select id="select_type">
+                    <option value="1">Family</option>
+                    <option value="2">school</option>
+                    <option value="3">Collegus</option>
+                </select>
+                </br>
+                <label for="name">Name:</label>
+                <input id="name" type="name" name="name" required />
+                </br>
+                <label for="address">Address:</label>
+                <input id="address" type="name" name="address" required  />
+                </br>
+                <label for="tel">Tel:</label>
+                <input id="tel"  type="tel" name="telephone" required />
+                </br>
+                <label for="email">Email:</label>
+                <input id="email" type="email" name="email" required/>
+                </br>
+                <button id="add" disabled="disabled">Add</button>
+                </br>
+        </form>
+
+        <div id="filter">
+            <label>Show me:</label>
+        </div>
+        <div id="familytype"></div>
+       
+ <div id="familyList"></div>
+
+    </div>

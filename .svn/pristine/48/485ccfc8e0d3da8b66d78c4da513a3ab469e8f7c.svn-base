@@ -1,0 +1,16 @@
+<form action="#">
+    <div id= "editimageupload-container"></div>
+    <input class="name" value="<%= name %>" />
+   <label for="type">Type:</label>
+                <select id="select_type">
+                    <option value="1">Family</option>
+                    <option value="2">school</option>
+                    <option value="3">College</option>
+                </select>
+
+    <input class="address" value="<%= address %>" />
+    <input class="tel" value="<%= tel %>" />
+    <input class="email" value="<%= email %>" />
+    <button class="save">Save</button>
+    <button class="cancel">Cancel</button>
+</form>

@@ -1,0 +1,30 @@
+<?php /* @var $this Controller */ ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="language" content="en" />
+
+    <!-- blueprint CSS framework -->
+    <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css"/>
+
+    <title><?php echo CHtml::encode($this->pageTitle); ?></title>
+    <script>
+    !function(){
+        base_url = "<?php echo Yii::app()->request->baseUrl; ?>";
+    }();
+    </script>
+
+<script type="text/template" id="imageupload">
+ <label for="photo">Photo:</label>
+<input id="photo" type="file"  class = "inputfile" />
+</script>
+</head>
+
+<body>
+    <div id="main-page">
+    <?php echo $content; ?>
+</div>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/lib/require.js" data-main="<?php echo Yii::app()->request->baseUrl; ?>/js/config"></script> 
+</body>
+</html>

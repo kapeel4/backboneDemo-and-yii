@@ -1,0 +1,123 @@
+define(['jquery', 'backbone', 'js/Helper/imageupload_helper',"text!template/contactTemplate.html","text!template/editcontactTemplate.html"],
+    function($, Backbone, ImageUploadHelper,contactTemplate, editcontactTemplate) {
+        // var ImageUploadHelper = requirejs('js/Helper/imageupload_helper');
+        var ContactView = Backbone.View.extend({
+            tagName: "article",
+            className: "contact-container",
+            imgUrl: "",
+            template: contactTemplate,
+            editTemplate: _.template(editcontactTemplate),
+
+            events: {
+                "click button.delete": "deleteContact",
+                "click button.edit": "editContact",
+                "click button.save": "saveEdits",
+                "click button.cancel": "cancelEdit"
+            },
+
+            cancelEdit: function() {
+                this.render();
+            },
+            editContact: function(e) {
+
+                this.$el.html(this.editTemplate(this.model.toJSON()));
+                this.imageUpload = new ImageUploadHelper({
+                    renderTo: $('#editimageupload-container')
+                }).render();
+
+
+                var newOpt = $("<option/>", {
+                    html: "<em>Add new...</em>",
+                    value: "addType"
+                });
+
+
+                // this.select = directory.createSelect().addClass("type")
+                //     .val(this.$el.find("#type").val()).append(newOpt)
+                //     .insertAfter(this.$el.find(".name"));
+
+                this.$el.find("input[type='hidden']").remove();
+                //  if (this.select.val() === "addType") {
+                // this.select.remove();
+
+                // $("<input />", {
+                //     "class": "type"
+                // }).insertAfter(this.$el.find(".name")).focus();
+                // }
+            },
+            saveEdits: function(e) {
+                e.preventDefault();
+                var me = this;
+                me.imgUrl = me.imageUpload.getImageUrl();
+
+                var formData = {},
+                prev = this.model.previousAttributes();
+                $(e.target).closest("form").find(":input").add(".photo").each(function() {
+
+                    var el = $(this);
+                    formData[el.attr("class")] = el.val();
+                });
+
+
+
+                this.model.set(formData);
+                this.model.set({
+                    'photo': this.imgUrl
+                });
+               
+                 this.render();
+
+                $.ajax({
+                    type: "POST",
+                     data: {
+                        "postdata": this.model.toJSON()
+                    },
+
+                    url: base_url + '/index.php/Contact/getUpdateContact'
+                   
+                });
+
+
+                _.each(contacts, function(contact) {
+
+                    if (_.isEqual(contact, prev)) {
+                        contacts.splice(_.indexOf(contacts, contact), 1, formData);
+                    }
+                });
+            },
+            deleteContact: function() {
+                var removedType = this.model.get("type").toLowerCase();
+
+                this.model.destroy();
+                 
+                 $.ajax({
+                    type: "POST",
+                     data: {
+                        "postdata": this.model.toJSON()
+                        },
+
+                    url: base_url + '/index.php/Contact/deleteContactData'
+                   
+                });
+
+                this.remove();
+
+                // if (_.indexOf(directory.getTypes(), removedType) === -1) {
+                //     directory.$el.find("#filter select").children("[value='" + removedType + "']").remove();
+                // }
+            },
+
+            render: function() {
+
+                var tmpl = _.template(this.template);
+                //debugger;
+                this.$el.html(tmpl(this.model.toJSON()));
+
+
+                return this;
+            }
+
+        });
+        return ContactView;
+
+    });

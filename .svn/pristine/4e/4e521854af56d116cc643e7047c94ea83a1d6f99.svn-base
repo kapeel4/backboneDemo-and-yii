@@ -1,0 +1,256 @@
+define(['jquery', 'backbone', 'js/collection/contacts', 'js/views/contactView', 'js/Helper/imageupload_helper'],
+    function($, Backbone, Contacts, Contactview, imagehelper1) {
+
+        var ImageUploadHelper = requirejs('js/Helper/imageupload_helper');
+        var DirectoryView = Backbone.View.extend({
+            el: $("#contacts"),
+            imgUrl: '',
+            // contacts: [],
+            initialize: function() {
+                // debugger;
+                var me = this;
+                var contactCollection = new Contacts();
+                contactCollection.fetch().then(function(collection) {
+                    me.collection = contactCollection;
+                    me.contacts = collection;
+                    me.$el.find("#filter").append(me.createSelect());
+                    me.on("change:filterType", me.filterByType, me);
+                    me.collection.on("reset", me.render, me); //binding this gives error while unbinding
+                    me.collection.on("add", me.renderContact, me);
+                    me.collection.on("remove", me.removeContact, me);
+                    me.render();
+                });
+
+
+            },
+
+            events: {
+                "change #filter select": "setFilter",
+                "click #add": "addContact",
+                "click #showForm": "showForm",
+                "blur #name": "validateName",
+                "blur #address": "validateAddress",
+                "keydown #tel": "validateTelephone",
+                "blur #email": "validateEmail"
+
+
+
+            },
+            validateName: function(e) {
+                // debugger;
+                var item = $(e.target);
+                var me = this;
+                if ((_.isEmpty(item.val()) == true) || ((item.val()).toString().length) <= 5) {
+                    item.css('border-color', 'red');
+                    me.$el.find('#add').attr('disabled', 'disabled');
+                } else {
+                    item.css('border-color', '');
+                    me.$el.find('#add').removeAttr('disabled');
+                }
+                //     item.css('border-color', 'no');
+
+
+            },
+            validateAddress: function(e) {
+                // debugger;
+                var item = $(e.target);
+                var me = this;
+                if (_.isEmpty(item.val()) == true) {
+                    item.css('border-color', 'red');
+                    me.$el.find('#add').attr('disabled', 'disabled');
+                } else {
+                    item.css('border-color', '');
+                    me.$el.find('#add').removeAttr('disabled');
+                }
+            },
+            validateTelephone: function(event) {
+
+                if (event.keyCode == 46 || event.keyCode == 8) {} else {
+                    if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+                        event.preventDefault();
+                    }
+                }
+
+                //  var item = $(e.target);
+                //  var me = this;
+                // if ((_.isEmpty(item.val()) == true)){
+                //     item.css('border-color', 'red');
+                //     me.$el.find('#add').attr('disabled', 'disabled');
+                // }
+                //  else {
+                //   item.css('border-color', '');
+                //    me.$el.find('#add').removeAttr('disabled');
+                // }
+            },
+            validateEmail: function(e) {
+                debugger
+                 var item = $(e.target);
+                var me = this;
+                var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+                // return pattern.test(emailAddress);
+
+                if (pattern.test(item.val()) == false) {
+                    item.css('border-color', 'red');
+                    me.$el.find('#add').attr('disabled', 'disabled');
+                } else {
+                    item.css('border-color', '');
+                    me.$el.find('#add').removeAttr('disabled');
+                }
+
+            },
+
+            setFilter: function(e) {
+                this.filterType = e.currentTarget.value;
+
+                this.trigger("change:filterType");
+            },
+            showForm: function() {
+
+                this.$el.find("#addContact").slideToggle();
+            },
+
+            removeContact: function(removedModel) {
+
+                var removed = removedModel.attributes;
+
+                if (removed.photo === "/img/placeholder.png") {
+                    delete removed.photo;
+                }
+
+                _.each(contacts, function(contact) {
+                    if (_.isEqual(contact, removed)) {
+                        contacts.splice(_.indexOf(contacts, contact), 1);
+                    }
+                });
+            },
+
+            filterByType: function() {
+                if (this.filterType === "all") {
+                    this.collection.reset(this.contacts);
+
+                    contactsRouter.navigate("filter/all");
+
+                } else {
+                    this.collection.reset(this.contacts, {
+                        silent: true
+                    });
+
+                    var filterType = this.filterType,
+                        filtered = _.filter(this.collection.models, function(item) {
+                            return item.get("type") === filterType;
+                        });
+
+                    this.collection.reset(filtered);
+
+                    contactsRouter.navigate("filter/" + filterType);
+                }
+            },
+            addContact: function(e) {
+                //  debugger;
+                e.preventDefault();
+                var me = this;
+                me.imgUrl = me.imageUpload.getImageUrl();
+                var newModel = {};
+                $("#addContact").find("input").each(function(i, el) {
+                    if ($(el).val() !== "") {
+                        if (el.id === "photo") {
+                            newModel[el.id] = me.imgUrl;
+                            el.parentNode.replaceChild(el.cloneNode(true), el);
+                        } else {
+                            newModel[el.id] = $(el).val();
+                            $(el).val('');
+                        };
+                    }
+                });
+                // debugger;
+                newModel['type'] = Number(me.$el.find('#select_type').val());
+                // $("#addContact").find("#select_type").each(function(i, el) {
+                //     if ($(el).val() !== "") {
+                //         if (el.id === "select_type") {
+                //             newModel[el.id] = $("#select_type").val();
+                //             el.parentNode.replaceChild(el.cloneNode(true), el);
+                //         } 
+                //     }
+                // });
+
+
+                var formData = newModel;
+                this.contacts.push(formData);
+                //debugger;
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        'postData': formData
+                    },
+                    url: base_url + '/index.php/Contact/addContactList'
+
+
+                });
+
+                // this.contacts.push(formData);
+                // debugger;
+                if (_.indexOf(this.getTypes(), formData.type) === -1) {
+                    me.collection.add(new this.collection.model(formData));
+                    this.$el.find("#filter").find("select").remove().end().append(this.createSelect());
+
+
+                } else {
+                    this.collection.add(new Contactview(formData));
+                }
+
+            },
+
+            render: function() {
+                //debugger;
+                var that = this;
+                this.$el.find('#familyList').html('');
+                this.$el.find('#imageupload-container').html('');
+
+                _.each(this.collection.models, function(item) {
+                    that.renderContact(item);
+                }, this);
+                this.imageUpload = new ImageUploadHelper({
+                    renderTo: $('#imageupload-container')
+                }).render();
+
+                // var imageUpload = new ImageUploadHelper().render().el;
+                // this.$el.find('#imageupload').append(imageUpload);
+
+            },
+
+            renderContact: function(item) {
+
+
+                var contactView = new Contactview({
+                    model: item
+                });
+
+
+                this.$el.find('#familyList').append(contactView.render().el);
+
+            },
+            getTypes: function() {
+
+                return _.uniq(this.collection.pluck("type"), false, function(type) {
+                    return type.toLowerCase();
+                });
+            },
+
+            createSelect: function() {
+                var filter = this.$el.find("#filter"),
+                    select = $("<select/>", {
+                        html: "<option >All</option>"
+                    });
+
+                _.each(this.getTypes(), function(item) {
+                    var option = $("<option/>", {
+                        value: item,
+                        text: item
+                    }).appendTo(select);
+                });
+                return select;
+            }
+        });
+        return DirectoryView;
+    });

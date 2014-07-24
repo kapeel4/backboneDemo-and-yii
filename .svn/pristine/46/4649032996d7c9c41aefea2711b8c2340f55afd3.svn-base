@@ -1,0 +1,24 @@
+ require.config({
+    // Initialize the application with the main application file
+    deps: ["js/main"],
+
+    baseUrl: "",
+
+    paths: {
+      // Libraries
+      "jquery": "js/lib/jquery.min",
+     
+      "lodash" : "js/lib/lodash.min",
+      "backbone": "js/lib/backbone.min",
+    
+
+    },
+
+    shim: {
+      "backbone": {
+        deps: ["lodash", "jquery"],
+        exports: "Backbone"
+      }
+     
+    }
+  });
