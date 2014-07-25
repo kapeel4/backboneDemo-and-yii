@@ -8,20 +8,30 @@ class FileUploadController extends Controller
 	}
 			public function actioncontactUpload(){
 			      // Generate filename
-			$filename = md5(mt_rand()).'.jpg';
-
 			// Read RAW data
+
 			$data = file_get_contents('php://input');
 
+			$imageDetail = getimagesize('data://'.substr($data, 5));
+
+			$filename = md5(mt_rand()).'.jpg';
+
+			
 			// Read string as an image file
 			$image = file_get_contents('data://'.substr($data, 5));
 
 			// Save to disk
-			if ( ! file_put_contents('images/'.$filename, $image)) {
+			if (! file_put_contents('images/'.$filename, $image)) {
 			 header('HTTP/1.1 503 Service Unavailable');
-			
 			}
-	echo 'images/'.$filename;
+			$thumb = imagecreatetruecolor(100, 100);
+			$source = imagecreatefromjpeg('data://'.substr($data, 5));
+
+			imagecopyresized($thumb, $source, 0, 0, 0, 0, 100, 100, $imageDetail[0], $imageDetail[1]);
+			//file_put_contents(, );
+			imagejpeg($thumb,'images/thumb/'.$filename);
+
+	echo $filename;
 	}
 
 	

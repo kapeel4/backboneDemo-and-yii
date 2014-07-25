@@ -2,12 +2,13 @@
      <div id="session" class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
       <a class="navbar-brand" href="#">Session</a>
+      <p class="navbar-text navbar-right" id="usersession">Not logged in</p>
     </div>
     </div>
     </nav>
 
     <div id="contacts">
-    <div>
+    <div id="sessionForm">
             <label for="username" class="col-sm-2 control-label" >Username:</label>
                 <input id="username" data-toggle="tooltip" data-placement="left" title="Name" placeholder="username" type="text" name="username" required  /><br/>
                 </br>

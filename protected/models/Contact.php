@@ -128,19 +128,21 @@ class Contact extends CActiveRecord
 	}
 	public function getlogin($username,$password){
 		$conn = Yii::app()->db;
-		$response = array();
+		//$response = array();
 		$sql = "SELECT * FROM login WHERE username = :username AND password = :password";
 		$cmd = $conn->createCommand($sql);
 		$cmd->bindParam(":username",$username,PDO::PARAM_STR);
         $cmd->bindParam(":password",$password,PDO::PARAM_STR);
 		$userData = $cmd->queryAll();
 		
-		if(!empty($userData)){
-			$response['_success'] = true;
-		}else{
-			$response['_success'] = false;
-		}
-		return $response;
+		if(!empty($userData))
+			return true;
+			//$response['_success'] = true;
+		// }else{
+		// 	$response['_success'] = false;
+		// }
+		return false;
+		//return $response;
 	}
 
 	public function addContactList($contactdata){

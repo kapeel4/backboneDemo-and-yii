@@ -53,14 +53,50 @@ class ContactController extends Controller
          echo CJSON::encode($response);
    	
    }
+   public function actionGetLoginData(){
+    $response= array();
+    $session = new CHttpSession;
+    $session->open();
+    if(isset($session['loggedin']) && $session['loggedin']==true)
+    {
+      $response['_success']= true;
+      $response['username']=$session['username'];
+
+    }
+    else{
+      $response['_success']= false;
+    }
+     $session->close();
+    echo CJSON::encode($response);
+   }
+   public function actionLogout(){
+    $response= array('_success' => true);
+    $session = new CHttpSession;
+    $session->open();
+    $session->destroy();
+    echo CJSON::encode($response);
+   }
    public function actionGetlogin(){
+    $response = array();
     $username = Yii::app()->request->getParam('username');
     $password = Yii::app()->request->getParam('password');
     $logindata = Contact::model()->getlogin($username,$password);
+    if($logindata) {
+      $session = new CHttpSession;
+      $session->open();
+      $session['loggedin'] = true;
+      $session['username'] = $username;
+      $response['_success']= true;
+      $response['username']=$username;
+      $session->close();
+    }
+    else
+       $response['_success']= false;
+
     //$logindata['_success']=true;
     //var_dump($username,$password);
    // exit();
-      echo CJSON::encode($logindata);
+      echo CJSON::encode($response);
    }
 	// Uncomment the following methods and override them if needed
 	/*

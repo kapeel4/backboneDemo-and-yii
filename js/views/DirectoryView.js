@@ -51,6 +51,8 @@ define(['jquery', 'backbone', 'js/collection/contacts', 'js/views/contactView', 
                 $.post(base_url+'/index.php/Contact/getlogin',{username:username,password:password},function(data){
                     if(data._success == true) {
                       Alertify.alert("testing for login");
+                      $('#usersession').html('Welcome '+data.username +' | <a href="#logout" class="navbar-link">Logout</a>');
+                      $('#sessionForm').hide();
                     } else {
                         Alertify.alert("login failed");
                     }
@@ -218,6 +220,7 @@ define(['jquery', 'backbone', 'js/collection/contacts', 'js/views/contactView', 
                 var that = this;
                 this.$el.find('#addContact').hide();
                 this.$el.find('#familyList').html('');
+                
                 this.$el.find('#imageupload-container').html('');
 
                 _.each(this.collection.models, function(item) {
